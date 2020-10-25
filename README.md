@@ -1,68 +1,49 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Happy Hour 
 
-## Available Scripts
+1. What tech stack will you use for your final project? 
+  I will be using React, Node, and Firebase for my final project.  
 
-In the project directory, you can run:
+2. Is the front-end UI or the back-end going to be the focus of your project? Or are
+you going to make an evenly focused full-stack application?
+  The front end is going to be the main focus with the backend mainly being set up just for the database.
 
-### `npm start`
+3. Will this be a website? A mobile app? Something else?
+  I want to make a single page application that will eventually be turned into a fully functioning app using react native. 
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+4. What goal will your project be designed to achieve?
+  I want to create an app that lets you see all of the happy hours in your area and be able to filter by different alcohols. Eventually I want to be able to have a calendar with events like wine festivals.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+5. What kind of users will visit your app? In other words, what is the demographic of
+your users?
+  Mainly college age adults 21-30. 
 
-### `npm test`
+6. What data do you plan on using? How are you planning on collecting your data?
+You may have not picked your actual API yet, which is fine, just outline what kind
+of data you would like it to contain. You are welcome to create your own API and
+populate it with data. If you are using a Python/Flask stack are required to create
+your own API.
+  I want to use the google maps and places API to find business near me and my own API to record data such as users and the happy hours of the locations to display.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+7. In brief, outline your approach to creating your project (knowing that you may not
+know everything in advance and that these details might change later). Answer
+questions like the ones below, but feel free to add more information:
+a. What does your database schema look like?
+  The basic schema of the database with consist of users with a business user account to access more information and display custom information. 
 
-### `npm run build`
+b. What kinds of issues might you run into with your API? This is especially
+important if you are creating your own API, web scraping produces
+notoriously messy data.
+  I might have issues with the API being down. The API may be limited in the way I want to pull data. 
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+c. Is there any sensitive information you need to secure?
+  I need to secure my API key and the information of business and users that I may collect. 
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+d. What functionality will your app include?
+  The basic functionality will be a map that displays bars based off of filters that you can apply. There will also be the functionality to make a user account to save the calendar events.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+e. What will the user flow look like?
+  The basic user flow will either be to go to the app and filter by either location or current user location. This will display all of the bars based off of the filters. The user can look at each and compare what they would prefer
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+f. What features make your site more than a CRUD app? What are your
+stretch goals?
+  My site will include current google data based off of places. The map will be the main feature and the components built to display the place data. I want to eventually add the calendar and event finding. My far stretch goals include having businesses work with me to have private events exclusive to only members that use the app. 
