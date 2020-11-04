@@ -65,6 +65,12 @@ export default [
           }
       ]
   },
+  { 
+    "featureType": "poi", 
+    "stylers": [ 
+      { "visibility": "off" } 
+    ] 
+  }, 
   {
       "featureType": "road.highway",
       "elementType": "geometry.fill",

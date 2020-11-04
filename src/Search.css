@@ -6,10 +6,16 @@
   transform: translateX(-50%);
   width: 100%;
   max-width: 400px; 
+  color: #121212;
+}
+
+[data-reach-combobox-option] {
+  color: #121212 !important;
 }
 
 .Search__Input {
   padding: 0.5rem;
   font-size: 1.5rem;
   width: 100%;
+  box-shadow: 3px 3px 15px 3px black;
 }

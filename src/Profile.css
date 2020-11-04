@@ -1,0 +1,43 @@
+.Profile {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  background-color: #121212;
+}
+
+.Profile__MapLink {
+  font-size: 20px;
+  padding-top: 1rem;
+  padding-left: 1rem;
+}
+
+.Profile__MapLink > a{
+  text-decoration: none;
+  color: inherit;
+}
+
+.Profile__MapLink > a > span{
+  margin-left: 5px;
+}
+
+
+.Profile__Container {
+  padding-top: 20px;
+  display: flex;
+  height: 80vh;
+  justify-content: space-evenly;
+}
+
+.Profile__ContainerInfo {
+  background-color: rgba(255,255,255,.15);
+  width: 40%;
+  border-radius: 8px;
+  box-shadow: 5px 3px 5px black;
+}
+
+.Profile__ContainerFavorites {
+  background-color: rgba(255,255,255,.15);
+  width: 40%;
+  border-radius: 8px;
+  box-shadow: 5px 3px 5px black;
+}

@@ -1,0 +1,39 @@
+.PlaceDisplay{
+  color: rgba(255,255,255, 0.8);
+  background: rgba(255,255,255, 0.15);
+  padding: 10px;
+  box-shadow: 2px 3px 5px black;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.PlaceDisplay__Title{
+  margin: 0;
+}
+
+.PlaceDisplay__Text{
+  margin-bottom: 20px;
+}
+
+.PlaceDisplay__Text > p{
+  margin: 0;
+}
+
+.PlaceDisplay__Rating{
+  font-weight: 300;
+  font-size: 16px;
+}
+
+.PlaceDisplay__Button{
+  text-decoration: none;
+  color: inherit;
+  background-color: #121212;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.PlaceDisplay__Button:hover{
+  background-color: rgba(255,255,255, 0.8);
+  color: #121212;
+}
