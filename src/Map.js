@@ -14,6 +14,7 @@ const mapContainerStyle = {
   width: '100vw',
   height: '100vh',
 }
+
 let center= {
   lat: 40.9584, 
   lng: -75.9746  
@@ -58,6 +59,7 @@ function Map() {
   
   
   const panToPlace = useCallback(({lat, lng}) => {
+    setPanel("hide");
     mapRef.current.panTo({lat,lng});
     mapRef.current.setZoom(17);
   }, []);
@@ -111,7 +113,7 @@ function Map() {
   return (
     <div className="Map">
       <div className="Map__ProfileLink">
-        <Link to="/profile"><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
+        <Link to="/login"><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
       </div>
       <Panel visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace}/>
       <Search center={center} panTo={panTo} />

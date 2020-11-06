@@ -1,0 +1,79 @@
+.Register {
+  width: 100vw;
+  height: 100vh;
+  background-color: #121212;
+}
+
+.Register__MapLink {
+  font-size: 20px;
+  padding-top: 1rem;
+  padding-left: 1rem;
+}
+
+.Register__MapLink > a{
+  text-decoration: none;
+  color: inherit;
+}
+
+.Register__MapLink > a > span{
+  margin-left: 5px;
+}
+
+.Register__Container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 25vh;
+  
+}
+
+.Register__Container > form {
+  padding: 50px;
+  border-radius: 8px;
+  background-color: rgba(255,255,255, 0.15);
+  box-shadow: 5px 3px 5px black;
+  width: 50vw;
+}
+
+.Register__Container > form > h2 {
+  margin: 0;
+}
+
+.Register__ContainerFormInputGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.Register__ContainerFormInputGroup > input {
+  width: 100%;
+}
+
+.Register__Container > form > button {
+  margin-top: 20px;
+  color: inherit;
+  background-color: #121212;
+  padding: 10px 50px;
+  font-weight: 700;
+  font-size: 16px;
+  border: none; 
+  outline: none;
+  border-radius: 5px;
+  box-shadow: 2px 2px 3px black;
+}
+
+.Register__Container > form > button:hover {
+  background-color: rgba(255,255,255, 0.80);
+  color: #121212;
+  box-shadow: none;
+}
+
+.Register__ContainerFormRegisterLink {
+  color: inherit;
+  display: block;
+  margin-top: 10px;
+  padding-bottom: 0;
+}
+

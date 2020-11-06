@@ -7,11 +7,19 @@
   z-index: 10;
   width: 5rem;
   cursor: pointer;
-  text-decoration: none;
+  outline: none;
 }
 
 .Locate img {
   padding: 0.5rem;
   width: 100%;
   height: 3.5rem;
+}
+
+@media only screen and (max-width: 480px) {
+  .Locate {
+    position: absolute;
+    top: 36rem;
+    right: 2.20rem;
+  }
 }

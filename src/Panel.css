@@ -59,3 +59,23 @@ h1 {
   color: rgba(255,255,255,0.8);
   text-align: center;
 }
+
+
+@media only screen and (max-width: 480px) {
+  #Panel {
+    width: 90vw;
+    z-index: 21;
+  }
+
+  #Panel__Tab {
+    left: 90vw;
+  }
+
+  .show {
+    transform: translate3d(0vw, 0,0);
+  }
+  
+  .hide {
+     transform: translate3d(-90vw, 0, 0);
+  }
+}

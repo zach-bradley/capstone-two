@@ -19,3 +19,15 @@
   width: 100%;
   box-shadow: 3px 3px 15px 3px black;
 }
+
+@media only screen and (max-width: 480px) {
+  .Search {
+    width: 60%;
+    left: 35%;
+    z-index: 20;
+  }
+
+  [data-reach-combobox-popover] {
+    z-index: 20;
+  }
+}
