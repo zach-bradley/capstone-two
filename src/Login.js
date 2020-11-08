@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import {auth} from './firebase';
 import "./Login.css";
 
@@ -8,6 +8,7 @@ function Login() {
     email: "",
     password: ""
   });
+  const history = useHistory();
 
   const handleChange = e => {
     const {name, value} = e.target;
@@ -19,7 +20,10 @@ function Login() {
 
   const handleSubmit = e => {
     e.preventDefault();
-
+    auth.signInWithEmailAndPassword(formData.email, formData.password)
+    .then(auth => {
+      history.push("/map")
+    }).catch(error => alert(error.message))
   }
 
   return (

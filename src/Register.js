@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 import './Register.css';
-import {auth} from './firebase'
+import {auth, db} from './firebase';
 
 function Register() {
   const[formData, setFormData] = useState({
@@ -9,7 +9,7 @@ function Register() {
     password: "",
     name: ""
   });
-
+  const history = useHistory();
   const handleChange = e => {
     const {name, value} = e.target;
     setFormData(fData => ({
@@ -23,6 +23,12 @@ function Register() {
     auth.createUserWithEmailAndPassword(formData.email, formData.password)
     .then((auth) => {
       console.log(auth)
+      return db.collection('users').doc(auth.user.uid).set({
+        displayName: formData.name
+      });
+    })
+    .then(() => {
+        history.push("/profile")
     }).catch(error => alert(error.message))
   }
 
@@ -34,7 +40,7 @@ function Register() {
     </Link>
     </div>
     <div className="Register__Container">
-      <form>
+      <form onSubmit={handleSubmit}>
         <h2>Join The Party:</h2>
         <div className="Register__ContainerFormInputGroup">
           <label htmlFor="email">Email:</label>       
@@ -48,7 +54,7 @@ function Register() {
           <label htmlFor="name">Name:</label>       
           <input type="name" name="name" value={formData.name} onChange={handleChange}/>   
         </div>
-        <button type="submit" onClick={handleSubmit}>Register</button> 
+        <button type="submit">Register</button> 
         <Link to="/login" className="Register__ContainerFormRegisterLink">
         Returning user
       </Link>  
@@ -58,4 +64,4 @@ function Register() {
   )
 }
 
-export default Register
+export default Register;

@@ -113,7 +113,7 @@ function Map() {
   return (
     <div className="Map">
       <div className="Map__ProfileLink">
-        <Link to="/login"><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
+        <Link to="/profile"><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
       </div>
       <Panel visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace}/>
       <Search center={center} panTo={panTo} />

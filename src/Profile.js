@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import "./Profile.css"
 
-function Profile() {
+function Profile(user) {
   return (
     <div className="Profile">
       <div className="Profile__MapLink">
@@ -13,6 +13,7 @@ function Profile() {
       <div className="Profile__Container">
         <div className="Profile__ContainerInfo">
           <h1>Info</h1>
+          <p>{user.displayName}</p>
         </div>
         <div className="Profile__ContainerFavorites">
           <h1>Favorites</h1>
