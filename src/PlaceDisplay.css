@@ -7,6 +7,16 @@
   margin-bottom: 10px;
 }
 
+.PlaceDisplay__Footer {
+	display: flex;
+}
+
+.PlaceDisplay__Footer > i {
+	margin-left: auto;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
 .PlaceDisplay__Title{
   margin: 0;
 }

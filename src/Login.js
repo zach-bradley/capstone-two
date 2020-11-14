@@ -30,7 +30,7 @@ function Login() {
     <div className="Login">
       <div className="Login__MapLink">
       <Link to="/map">
-        <i class="fas fa-arrow-left"></i><span>Back To Map</span>
+        <i className="fas fa-arrow-left"></i><span>Back To Map</span>
       </Link>
       </div>
       <div className="Login__Container">

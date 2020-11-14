@@ -11,20 +11,32 @@ function App() {
   useEffect(() => {
     auth.onAuthStateChanged(authUser => {
       if(authUser) {
-        setUser(authUser)
+        setUser({
+			name: authUser.displayName,
+			email: authUser.email,
+			uid: authUser.uid
+		})
       } else {
         setUser(null)
       }
     });
   }, [])
+	
+  const handleAuthentication = () => {
+    if (user) {
+	  setUser(null)
+      auth.signOut()
+    }
+  }
+  
   return (
     <div className="App">
       <BrowserRouter>
         <Route path='/map'>
-          <Map />
+          <Map user={user}/>
         </Route>
         <Route exact path='/profile'>
-          <Profile user={user} />
+          <Profile user={user} handleAuthentication={handleAuthentication}/>
         </Route>
         <Route exact path="/login">
           <Login />
@@ -32,7 +44,7 @@ function App() {
         <Route exact path="/register">
           <Register />
         </Route>
-        <Redirect to="/register" />
+        <Redirect to={user ? "/map" : "/login"} />
       </BrowserRouter>
     </div>
   );

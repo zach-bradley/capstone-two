@@ -24,9 +24,6 @@ const options = {
   disableDefaultUI: true
 }
 
-function timeout(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 function formatData(data) {
   return data.map(place => (
@@ -40,7 +37,7 @@ function formatData(data) {
   )); 
 }
 
-function Map() {
+function Map({user}) {
   const [marker, setMarker] = useState(center);
   const [places, setPlaces] = useState([]);
   const [term, setTerm] = useState();
@@ -50,7 +47,7 @@ function Map() {
     googleMapsApiKey:"AIzaSyBWMoZX5xY3yW07JpwybHdhogQn9R1XG4c",
     libraries
   });
-
+	
   const panTo = useCallback(({lat, lng}) => {
     mapRef.current.panTo({lat, lng});
     mapRef.current.setZoom(15);
@@ -77,16 +74,22 @@ function Map() {
     setPanel(panel === "hide" ? "show" : "hide")
   }
 
+  const handleMapClick = e => {
+    setMarker({
+      lat: e.latLng.lat(),
+      lng: e.latLng.lng()})
+  }
+
 	useEffect(() => {
 		async function fetchData() {
 			try{
-				const response = await Places.textsearch({
+				let response = await Places.textsearch({
 				  query: term,
 				  location: `${marker.lat}, ${marker.lng}`,
 				  radius: 1000
         });
         setPlaces(formatData(response.results))
-        await timeout(2000);
+
 				const next = await Places.textsearch({
 					query: term,
 					radius: 1000,
@@ -96,7 +99,7 @@ function Map() {
 				setPlaces(p => p.concat(formatData(next.results)))
 
 			} catch(error) {
-				console.log(error)
+        console.log(error)
 			}			
 		}
 		fetchData()
@@ -111,11 +114,11 @@ function Map() {
   if (!isLoaded) return "Loading maps";
 
   return (
-    <div className="Map">
+    <div className="Map"> 
       <div className="Map__ProfileLink">
-        <Link to="/profile"><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
+        <Link to={user ? "/profile" : "/login"}><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
       </div>
-      <Panel visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace}/>
+      <Panel user={user} visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace}/>
       <Search center={center} panTo={panTo} />
       <div className="Checkbox">
         <h5>Filters</h5>
@@ -139,7 +142,7 @@ function Map() {
         </form>    
       </div>
       <Locate panTo={panTo} />
-      <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={marker} options={options} onLoad={onMapLoad}>
+      <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={marker} options={options} onLoad={onMapLoad} onClick={handleMapClick}>
         <Marker className="barMarker" key={`${marker.lat}-${marker.lng}`} position={{lat: marker.lat, lng:marker.lng}} />
 
         {places.length > 0 && places.map(place => ( <Marker key={place.key} position={{lat: place.latlng.lat, lng: place.latlng.lng}} onClick={() => {setSelected(place)}}/> ))}

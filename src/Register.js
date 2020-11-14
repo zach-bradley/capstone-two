@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import './Register.css';
-import {auth, db} from './firebase';
+import {auth} from './firebase';
 
 function Register() {
   const[formData, setFormData] = useState({
@@ -22,10 +22,9 @@ function Register() {
     e.preventDefault();
     auth.createUserWithEmailAndPassword(formData.email, formData.password)
     .then((auth) => {
-      console.log(auth)
-      return db.collection('users').doc(auth.user.uid).set({
-        displayName: formData.name
-      });
+      return auth.user.updateProfile({
+		  displayName: formData.name
+	  });
     })
     .then(() => {
         history.push("/profile")
@@ -36,7 +35,7 @@ function Register() {
     <div className="Register">
     <div className="Register__MapLink">
     <Link to="/map">
-      <i class="fas fa-arrow-left"></i><span>Back To Map</span>
+      <i className="fas fa-arrow-left"></i><span>Back To Map</span>
     </Link>
     </div>
     <div className="Register__Container">

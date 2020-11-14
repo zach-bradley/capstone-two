@@ -3,6 +3,7 @@
   width: 100vw;
   margin: 0;
   background-color: #121212;
+	color: inherit;
 }
 
 .Profile__MapLink {
@@ -28,7 +29,22 @@
   justify-content: space-evenly;
 }
 
+.Profile__Header {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+}
+
+.Profile__HeaderLogout {
+	margin-left: auto;
+	margin-right: 16px;
+	cursor: pointer;
+}
+
 .Profile__ContainerInfo {
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
   background-color: rgba(255,255,255,.15);
   width: 40%;
   border-radius: 8px;
