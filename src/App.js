@@ -4,7 +4,7 @@ import Map from './Map';
 import Profile from './Profile';
 import Login from './Login';
 import Register from './Register';
-import {auth} from "./firebase";
+import {auth, db} from "./firebase";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -21,7 +21,7 @@ function App() {
       }
     });
   }, [])
-	
+  
   const handleAuthentication = () => {
     if (user) {
 	  setUser(null)
@@ -33,7 +33,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Route path='/map'>
-          <Map user={user}/>
+          <Map user={user} />
         </Route>
         <Route exact path='/profile'>
           <Profile user={user} handleAuthentication={handleAuthentication}/>
@@ -42,7 +42,7 @@ function App() {
           <Login />
         </Route>
         <Route exact path="/register">
-          <Register />
+          <Register user={user}/>
         </Route>
         <Redirect to={user ? "/map" : "/login"} />
       </BrowserRouter>

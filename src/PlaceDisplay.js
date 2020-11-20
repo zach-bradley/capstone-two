@@ -6,7 +6,7 @@ const formatAddress = (address) => {
   return arr[0];
 }
 
-function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace}) {
+function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace, handleFavorite}) {
   const [favorite, setFavorite] = useState("far")
   let linkformat = formatAddress(address)
   const linkAddress = `https://www.google.com/maps/dir/?api=1&origin=${coords}&destination=${linkformat}`;
@@ -17,10 +17,12 @@ function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace})
     panToPlace({lat, lng})
   }
   
-  const handleFavorite = e => {
-	  e.stopPropagation();
+  const handleFavoriteChange = e => {
+    let id = e.currentTarget.dataset.placeid
+    e.stopPropagation();
 	  if(favorite === "far") {
-		  setFavorite("fas")
+      setFavorite("fas");
+      handleFavorite(id)
 	  } else {
 		  setFavorite("far")
 	  }
@@ -35,7 +37,7 @@ function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace})
       </div>
 	  <div className="PlaceDisplay__Footer">
 		 <a className="PlaceDisplay__Button" href={linkAddress}>Directions</a>
-		 <i onClick={handleFavorite} className={favorite + " fa-heart"}></i>	 		  
+		 <i onClick={handleFavoriteChange} data-placeid={id} className={favorite + " fa-heart"}></i>	 		  
 	  </div>
 
     </div>

@@ -1,8 +1,11 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import "./Profile.css";
+import {db} from './firebase';
 
 function Profile({user, handleAuthentication}) {
+  let favorites = db.collection("users").doc(user?.uid).collection("favorites").get();
+
   return (
     <div className="Profile">
 	  <div className="Profile__Header">
@@ -22,9 +25,7 @@ function Profile({user, handleAuthentication}) {
         <div className="Profile__ContainerFavorites">
           <h1>Favorites</h1>
           <ul>
-            <li>BAR NAME</li>
-            <li>BAR NAME</li>
-            <li>BAR NAME</li>
+            {console.log(favorites)}
           </ul>
         </div>
       </div>
