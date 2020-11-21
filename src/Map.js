@@ -6,7 +6,7 @@ import Search from './Search';
 import Locate from "./Locate";
 import Panel from './Panel';
 import { Link } from 'react-router-dom';
-import {fetchData, retry, removeDups} from './helpers';
+import {fetchData, retry} from './helpers';
 import {db} from "./firebase";
 
 
@@ -32,6 +32,7 @@ function Map({user}) {
   const [places, setPlaces] = useState([]);
   const [term, setTerm] = useState();
   const [panel, setPanel] = useState("hide");
+  const [filter, setFilter] = useState("show")
   const [selected, setSelected] = useState(null);
   const {isLoaded, loadError} = useLoadScript({
     googleMapsApiKey:"AIzaSyBWMoZX5xY3yW07JpwybHdhogQn9R1XG4c",
@@ -64,7 +65,9 @@ function Map({user}) {
 	    .collection("users")
 	    .doc(user?.uid)
 	    .collection("favorites")
-		  .update(favPlace[0])
+		.add(favPlace[0])
+		.then(docRef => console.log(docRef))
+		.catch(error => console.log(error))
   }
 
   // const handlePan = () => {
@@ -73,8 +76,13 @@ function Map({user}) {
   //   setMarker({lat: lat, lng: lng, show:false})
   // }
   
-  const handleClick = () => {
-    setPanel(panel === "hide" ? "show" : "hide")
+  const handleClick = e => {
+    if(e.currentTarget.id === "Checkbox__Tab") {
+      setFilter(filter === 'filterhide' ? 'filtershow' : 'filterhide')
+    } else {
+      setPanel(panel === "hide" ? "show" : "hide")      
+    }
+
   }
 
   const handleMapClick = e => {
@@ -116,42 +124,45 @@ function Map({user}) {
         <Link to={user ? "/profile" : "/login"}><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
       </div>
       <Panel visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace} handleFavorite={handleFavorite}/>
-      <Search center={center} panTo={panTo} />
-      <div className="Checkbox">
-        <h5>Filters</h5>
-        <form onChange={onCheck}>
-          <button >Remove Filter</button>
-          <div>
-            <label htmlFor="bar">All Bars</label>
-            <input name="choice" type="radio" value="bar"/>	               
-          </div>
-          <div>
-            <label htmlFor="beer">Beer</label>
-            <input name="choice" type="radio" value="beer bar"/>	          
-          </div>
-          <div>
-            <label htmlFor="whiskey">Whiskey</label>
-            <input name="choice" type="radio" value="whiskey bar"/>	            
-          </div>
-          <div>
-            <label htmlFor="tequila">Tequila</label>
-            <input name="choice" type="radio" value="tequila bar"/>	            
-          </div>
-          <div>
-            <label htmlFor="wine">Wine</label>
-            <input name="choice" type="radio" value="wine bar"/>	            
-          </div>
-          <div>
-            <label htmlFor="sports">Sports Bar</label>
-            <input name="choice" type="radio" value="sports bar"/>	            
-          </div>
-        </form>    
+      <Search center={center} panTo={panTo} /> 
+	  <div id="Checkbox" className={filter}>
+      <div id="Checkbox__Tab" onClick={handleClick}>
+        <p className="Checkbox__TabText">Filters</p>
+      </div>  		  
+          <h5>Filters</h5>
+          <form onChange={onCheck} className="Map__Filter">
+            <button >Remove Filter</button>
+            <div>
+              <label htmlFor="bar">All Bars</label>
+              <input name="choice" type="radio" value="bar"/>	               
+            </div>
+            <div>
+              <label htmlFor="beer">Beer</label>
+              <input name="choice" type="radio" value="beer bar"/>	          
+            </div>
+            <div>
+              <label htmlFor="whiskey">Whiskey</label>
+              <input name="choice" type="radio" value="whiskey bar"/>	            
+            </div>
+            <div>
+              <label htmlFor="tequila">Tequila</label>
+              <input name="choice" type="radio" value="tequila bar"/>	            
+            </div>
+            <div>
+              <label htmlFor="wine">Wine</label>
+              <input name="choice" type="radio" value="wine bar"/>	            
+            </div>
+            <div>
+              <label htmlFor="sports">Sports Bar</label>
+              <input name="choice" type="radio" value="sports bar"/>	            
+            </div>
+          </form>    
       </div>
       <Locate panTo={panTo} />
       <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={marker} options={options} onLoad={onMapLoad} onClick={handleMapClick}>
         <Marker className="barMarker" key={`${marker.lat}-${marker.lng}`} position={{lat: marker.lat, lng:marker.lng}} />
         
-        {places?.length > 0 && places.map(place => ( <Marker key={place.key} position={{lat: place.latlng.lat, lng: place.latlng.lng}} onClick={() => {setSelected(place)}}/> ))}
+        {places?.length > 0 && places.map(place => ( <Marker key={place?.key} position={{lat: place?.latlng.lat, lng: place?.latlng.lng}} onClick={() => {setSelected(place)}}/> ))}
         {selected ? (
           <InfoWindow 
             position={{lat:selected.latlng.lat,lng:selected.latlng.lng}} 
