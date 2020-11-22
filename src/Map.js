@@ -27,7 +27,7 @@ const options = {
 }
 
 
-function Map({user}) {
+function Map({user, handleUpdater}) {
   const [marker, setMarker] = useState(center);
   const [places, setPlaces] = useState([]);
   const [term, setTerm] = useState();
@@ -53,28 +53,30 @@ function Map({user}) {
   
 	const onCheck = (e) => {
 		if(e.target.checked) {
-			setTerm(e.target.value);
+			if(e.target.value === "null") {
+				setTerm(null)
+				setPlaces([])
+			} else {
+				setTerm(e.target.value);
+				setFilter("filterhide");
+				setPanel("show")
+			}
+
 		} else {
       setTerm("")
 			setPlaces([])
 		}
   }
   const handleFavorite = id => {
-    let favPlace = places.filter(place => place.key === id)
+    let favPlace = places.filter(place => place.key === id);
 	  db
 	    .collection("users")
 	    .doc(user?.uid)
 	    .collection("favorites")
 		.add(favPlace[0])
-		.then(docRef => console.log(docRef))
+		.then(handleUpdater())
 		.catch(error => console.log(error))
   }
-
-  // const handlePan = () => {
-  //   let lat = mapRef.current.getCenter().lat()
-  //   let lng = mapRef.current.getCenter().lng()
-  //   setMarker({lat: lat, lng: lng, show:false})
-  // }
   
   const handleClick = e => {
     if(e.currentTarget.id === "Checkbox__Tab") {
@@ -82,7 +84,6 @@ function Map({user}) {
     } else {
       setPanel(panel === "hide" ? "show" : "hide")      
     }
-
   }
 
   const handleMapClick = e => {
@@ -131,7 +132,10 @@ function Map({user}) {
       </div>  		  
           <h5>Filters</h5>
           <form onChange={onCheck} className="Map__Filter">
-            <button >Remove Filter</button>
+			<div>
+              <label htmlFor="none">Remove Filter</label>
+              <input name="choice" type="radio" value="null"/>	               
+            </div>
             <div>
               <label htmlFor="bar">All Bars</label>
               <input name="choice" type="radio" value="bar"/>	               

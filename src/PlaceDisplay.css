@@ -15,6 +15,7 @@
 	margin-left: auto;
 	margin-right: 10px;
 	cursor: pointer;
+	color: #0094C6;
 }
 
 .PlaceDisplay__Title{
@@ -36,14 +37,9 @@
 
 .PlaceDisplay__Button{
   text-decoration: none;
-  color: inherit;
-  background-color: #121212;
+  color: #121212;
+  background-color: #0094C6;
   padding: 4px 6px;
   border-radius: 4px;
   font-weight: 700;
-}
-
-.PlaceDisplay__Button:hover{
-  background-color: rgba(255,255,255, 0.8);
-  color: #121212;
 }

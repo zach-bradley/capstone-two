@@ -1,15 +1,9 @@
 import React, {useState} from 'react';
 import './PlaceDisplay.css';
 
-const formatAddress = (address) => {
-  let arr = address.split(",");
-  return arr[0];
-}
-
 function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace, handleFavorite}) {
   const [favorite, setFavorite] = useState("far")
-  let linkformat = formatAddress(address)
-  const linkAddress = `https://www.google.com/maps/dir/?api=1&origin=${coords}&destination=${linkformat}`;
+  const linkAddress = `https://www.google.com/maps/dir/?api=1&destination=${address}`;
   const handleClick = (e) => {
     let target = e.currentTarget;
     let lat = parseFloat(target.getAttribute("data-lat"));

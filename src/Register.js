@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
 import {Link, useHistory} from 'react-router-dom';
 import './Register.css';
-import {auth} from './firebase';
+import {auth, db} from './firebase';
 
 function Register() {
   const[formData, setFormData] = useState({
     email: "",
     password: "",
-    name: ""
+    name: "",
+	username: ""
   });
   const history = useHistory();
   const handleChange = e => {
@@ -22,13 +23,17 @@ function Register() {
     e.preventDefault();
     auth.createUserWithEmailAndPassword(formData.email, formData.password)
     .then((auth) => {
-      return auth.user.updateProfile({
-		  displayName: formData.name
-	  });
-    })
+		console.log(auth)
+       db.collection("users").doc(auth.uid).set({
+		   email: formData.email,
+		   fullname: formData.name,
+		   uid: auth.user.uid,
+		   username: formData.username
+	   })
+	  })
     .then(() => {
         history.push("/profile")
-    }).catch(error => alert(error.message))
+    }).catch(error => console.log(error.message))
   }
 
   return (
@@ -52,6 +57,10 @@ function Register() {
         <div className="Register__ContainerFormInputGroup">
           <label htmlFor="name">Name:</label>       
           <input type="name" name="name" value={formData.name} onChange={handleChange}/>   
+        </div>
+        <div className="Register__ContainerFormInputGroup">
+          <label htmlFor="username">Userame:</label>       
+          <input type="username" name="username" value={formData.username} onChange={handleChange}/>   
         </div>
         <button type="submit">Register</button> 
         <Link to="/login" className="Register__ContainerFormRegisterLink">

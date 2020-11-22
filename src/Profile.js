@@ -1,11 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import "./Profile.css";
-import {db} from './firebase';
+import FavoriteItem from './FavoriteItem';
+import Modal from './Modal';
+import FriendSearch from './FriendSearch'
 
-function Profile({user, handleAuthentication}) {
-  let favorites = db.collection("users").doc(user?.uid).collection("favorites").get();
-
+function Profile({user, handleAuthentication, favorites, handleRemoveFavorite}) {
+	const [modalToggle, setModalToggle] = useState(false);
+	const modalHandler = e => {
+		e.preventDefault()
+		setModalToggle(!modalToggle)
+	}
+	const handleGetUsers = e => {
+		e.preventDefault()
+	}
   return (
     <div className="Profile">
 	  <div className="Profile__Header">
@@ -17,18 +25,31 @@ function Profile({user, handleAuthentication}) {
 		<p onClick={() => handleAuthentication()} className="Profile__HeaderLogout">Logout</p>
       </div>
       <div className="Profile__Container">
-        <div className="Profile__ContainerInfo">
-          <h1>Info</h1>
-		  <p><strong>Name:</strong> {user?.name}</p>
-		  <p><strong>Email:</strong> {user?.email}</p>
-        </div>
+		<div className="Profile__ContainerInfoFriends">
+			<div className="Profile__ContainerInfo">
+			  <h1>Info</h1>
+			  <p><strong>Username:</strong> {user?.username}</p>
+			  <p><strong>Name:</strong> {user?.fullname}</p>
+			  <p><strong>Email:</strong> {user?.email}</p>
+			</div>
+			<div className="Profile__ContainerFriends">
+			  <h1>Friends</h1>
+			  <button className="Profile__ContainerFriendsButton" onClick={modalHandler}>Add Friend</button>
+			</div>	
+		</div>
+
         <div className="Profile__ContainerFavorites">
           <h1>Favorites</h1>
-          <ul>
-            {console.log(favorites)}
-          </ul>
+		  <div className="Profile__FavoritesList">
+			  {favorites?.map(favorite => (
+			  	<FavoriteItem handleRemoveFavorite={handleRemoveFavorite} name={favorite.name} databaseId={favorite.id} rating={favorite.rating} address={favorite.address} key={favorite.key}/>
+			  ))}	  
+		</div>
         </div>
       </div>
+	  	<Modal show={modalToggle} modalClosed={modalHandler}>
+		  <FriendSearch />
+		</Modal>
     </div>
   )
 }

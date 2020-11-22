@@ -4,14 +4,23 @@ Places.apiKey = "AIzaSyBWMoZX5xY3yW07JpwybHdhogQn9R1XG4c";
 
 function formatData(data) {
   return data.map(place => (
-    {address: place.formatted_address,
+    {address: place.formatted_address ? place.formatted_address : null,
     latlng: place.geometry.location,
     name: place.name,
-    photos: place.photos,
+    photos: null,
     rating: place.rating,
     key: place.place_id
     }
   )); 
+}
+
+export function findIfIncluded(arr, term) {
+	arr.forEach(function(idx){
+		if(idx.key === term){
+			return true;
+		} 
+	});
+	return false;
 }
 
 export function removeDups(origArr, updatingArr) {
@@ -67,6 +76,11 @@ export async function retry(fn, n){
 		} catch{}
 	}
 	return {error: "Can't load any more data"}
+}
+			
+export function formatAddress(address) {
+  let arr = address.split(",");
+  return arr[0];
 }
 
 

@@ -13,7 +13,7 @@ function Panel({visibility, onClick, data, coords, panToPlace, user, handleFavor
       <div id="Panel" className={visibility}>
         <div className="Panel__PlaceList">
           {data.length > 0 ? data.map(place => (
-            <PlaceDisplay handleFavorite={handleFavorite} key={place.key} id={place.key} address={place.address} name={place.name} rating={place.rating} lat={place.latlng.lat} lng={place.latlng.lng} coords={coords} panToPlace={panToPlace}/>
+            <PlaceDisplay handleFavorite={handleFavorite} key={place?.key} id={place?.key} address={place?.address ? place?.address : place?.name} name={place?.name} rating={place?.rating} lat={place?.latlng.lat} lng={place?.latlng.lng} coords={coords} panToPlace={panToPlace}/>
           )) : <h1>Add filters to see nearby bars!</h1>}
         </div>
       </div>    

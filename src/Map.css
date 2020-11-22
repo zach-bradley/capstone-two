@@ -17,8 +17,8 @@
 	right: 7rem;
 	top: 1.75rem;
 	border: 1px solid black;
-	background-color: #414141;
-	border-radius: 999px;
+	background-color: rgb(203, 202, 203);
+	border-radius: 50%;
 	width: 50px;
 	height: 50px;
 }
@@ -33,18 +33,6 @@
 }
 
 @media only screen and (max-width: 480px) {
-	.Checkbox {
-		position: absolute;
-		z-index: 10;
-		right: 1rem;
-		bottom: 1.5rem;
-		background-color: #414141;
-		padding: 5px 8px;
-		color: rgba(255,255,255, 0.80);
-		border: 2px solid black;
-		box-shadow: 4px 4px 10px black;
-		border-radius: 4px;
-	}
 
 	.Map__ProfileLink {
 		right: 2rem;
@@ -60,9 +48,9 @@
 	left:0;
 	top:2.5rem;	
 	transition: transform .3s cubic-bezier(0, .52, 0, 1);
-  z-index: 12;
+  z-index: 11;
   height: 60vh;
-  width: 15vw;
+  width: 180px;
   background-color: #121212;
   box-shadow: 5px 0px 10px black;
   border-radius: 0 10px 10px 0;
@@ -84,7 +72,7 @@
 }
 
 .filterhide {
-	 transform: translate3d(-17.5vw, 0, 0);
+	 transform: translate3d(-205px, 0, 0);
 }
 
 .Checkbox__TabText {
@@ -97,10 +85,10 @@
 	overflow: visible;
   position: absolute;
   top: 8rem;
-  left: 17vw;
+  left: 200px;
   height: 100px;
   width: 45px;
-  z-index: 10;
+  z-index: 12;
   background-color: white;
   text-align: center;
   border-radius: 0 10px 10px 0;
