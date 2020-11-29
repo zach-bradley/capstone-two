@@ -8,7 +8,7 @@ function Register() {
     email: "",
     password: "",
     name: "",
-	username: ""
+	  username: ""
   });
   const history = useHistory();
   const handleChange = e => {
@@ -23,16 +23,19 @@ function Register() {
     e.preventDefault();
     auth.createUserWithEmailAndPassword(formData.email, formData.password)
     .then((auth) => {
-		console.log(auth)
-       db.collection("users").doc(auth.uid).set({
-		   email: formData.email,
-		   fullname: formData.name,
-		   uid: auth.user.uid,
-		   username: formData.username
-	   })
+     return auth.user.updateProfile({
+       displayName: formData.name
+     })
 	  })
     .then(() => {
-        history.push("/profile")
+       db.collection("users").doc(auth.currentUser.uid).set({
+		   email: formData.email,
+		   fullname: formData.name,
+		   uid: auth.currentUser.uid,
+		   username: formData.username
+     })           
+    }).then(() => {
+      history.push("/map")
     }).catch(error => console.log(error.message))
   }
 

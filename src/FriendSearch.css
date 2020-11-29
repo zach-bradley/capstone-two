@@ -9,3 +9,17 @@
 	font-size: 20px;
 	font-weight: 700;
 }
+
+.FriendSearch > input {
+	height: 30px;
+	background-color: inherit;
+	border-bottom: 2px solid #121212;
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: hidden;
+  border-bottom-style: groove;
+}
+
+.FriendSearch > input:focus {
+	outline: none;
+}

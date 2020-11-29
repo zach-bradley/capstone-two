@@ -1,5 +1,5 @@
 import Places from 'google-places-web';	
-
+import axios from "axios";
 Places.apiKey = "AIzaSyBWMoZX5xY3yW07JpwybHdhogQn9R1XG4c";
 
 function formatData(data) {
@@ -12,6 +12,16 @@ function formatData(data) {
     key: place.place_id
     }
   )); 
+}
+
+export async function postToServer(term, marker) {
+	let request = await axios.post("http://localhost:5001/happy-hour-79e9b/us-central1/api/search", {
+		query: term,
+		location: `${marker.lat}, ${marker.lng}`
+	})
+	let results = formatData(request.data.results);
+	let token = request.next_page_token ? request.next_page_token: null;
+	return {results: results, pageToken: token}
 }
 
 export function findIfIncluded(arr, term) {

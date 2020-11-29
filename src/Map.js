@@ -6,7 +6,7 @@ import Search from './Search';
 import Locate from "./Locate";
 import Panel from './Panel';
 import { Link } from 'react-router-dom';
-import {fetchData, retry} from './helpers';
+import {fetchData, retry, postToServer} from './helpers';
 import {db} from "./firebase";
 
 
@@ -27,7 +27,7 @@ const options = {
 }
 
 
-function Map({user, handleUpdater}) {
+function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
   const [marker, setMarker] = useState(center);
   const [places, setPlaces] = useState([]);
   const [term, setTerm] = useState();
@@ -38,6 +38,7 @@ function Map({user, handleUpdater}) {
     googleMapsApiKey:"AIzaSyBWMoZX5xY3yW07JpwybHdhogQn9R1XG4c",
     libraries
   });
+
 	
   const panTo = useCallback(({lat, lng}) => {
     mapRef.current.panTo({lat, lng});
@@ -95,20 +96,25 @@ function Map({user, handleUpdater}) {
   }
  
 	useEffect(() => {
-		async function getData() {
-			if(term) {
-				let placeData = await fetchData(marker, term);
-				let token = placeData.pageToken;
+      async function getData() {
+        if(term) {
+        let placeData = await postToServer(term,marker)
+        console.log(placeData)
+        let token = placeData.pageToken;
         setPlaces(placeData.results);
-        let next = await retry(() => fetchData(marker, term, token),8);
-        setPlaces(p => p.concat(next.results))
-        let nextToken = next.pageToken;
-        let final = await retry(() => fetchData(marker, term, nextToken),5);
-				setPlaces(p => p.concat(final.results))
-			}
-		}
-		getData()
-	}, [marker, term])
+        //   let next = await retry(() => fetchData(marker, term, token),8);
+        //   setPlaces(p => p.concat(next.results))
+        //   let nextToken = next.pageToken;
+        //   let final = await retry(() => fetchData(marker, term, nextToken),5);
+        //   setPlaces(p => p.concat(final.results))
+        }
+      }
+      getData()
+  }, [term,marker])
+  // marker, term, handleMapLoad
+  useEffect(() => {
+    setTerm("bar")
+  }, [])
 
   const mapRef = useRef();
   const onMapLoad = useCallback((map) => {
@@ -118,69 +124,69 @@ function Map({user, handleUpdater}) {
   if (loadError) return "Error loading maps";
   if (!isLoaded) return "Loading maps";
 
-  return (
-    <div className="Map">
-		  
-      <div className="Map__ProfileLink">
-        <Link to={user ? "/profile" : "/login"}><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
-      </div>
-      <Panel visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace} handleFavorite={handleFavorite}/>
-      <Search center={center} panTo={panTo} /> 
-	  <div id="Checkbox" className={filter}>
-      <div id="Checkbox__Tab" onClick={handleClick}>
-        <p className="Checkbox__TabText">Filters</p>
-      </div>  		  
+    return (
+      <div className="Map">
+        <div className="Map__ProfileLink">
+          <Link to={user ? "/profile" : "/login"}><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
+        </div>
+        <Panel visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace} handleFavorite={handleFavorite}/>
+        <Search center={center} panTo={panTo} /> 
+        <div id="Checkbox" className={filter}>
+          <div id="Checkbox__Tab" onClick={handleClick}>
+            <p className="Checkbox__TabText">Filters</p>
+          </div>  		  
           <h5>Filters</h5>
-          <form onChange={onCheck} className="Map__Filter">
-			<div>
-              <label htmlFor="none">Remove Filter</label>
-              <input name="choice" type="radio" value="null"/>	               
-            </div>
-            <div>
-              <label htmlFor="bar">All Bars</label>
-              <input name="choice" type="radio" value="bar"/>	               
-            </div>
-            <div>
-              <label htmlFor="beer">Beer</label>
-              <input name="choice" type="radio" value="beer bar"/>	          
-            </div>
-            <div>
-              <label htmlFor="whiskey">Whiskey</label>
-              <input name="choice" type="radio" value="whiskey bar"/>	            
-            </div>
-            <div>
-              <label htmlFor="tequila">Tequila</label>
-              <input name="choice" type="radio" value="tequila bar"/>	            
-            </div>
-            <div>
-              <label htmlFor="wine">Wine</label>
-              <input name="choice" type="radio" value="wine bar"/>	            
-            </div>
-            <div>
-              <label htmlFor="sports">Sports Bar</label>
-              <input name="choice" type="radio" value="sports bar"/>	            
-            </div>
-          </form>    
+            <form onChange={onCheck} className="Map__Filter">
+              <div>
+                <label htmlFor="none">Remove Filter</label>
+                <input name="choice" type="radio" value="null"/>	               
+              </div>
+              <div>
+                <label htmlFor="bar">All Bars</label>
+                <input name="choice" type="radio" value="bar" defaultChecked />	               
+              </div>
+              <div>
+                <label htmlFor="beer">Beer</label>
+                <input name="choice" type="radio" value="beer bar"/>	          
+              </div>
+              <div>
+                <label htmlFor="whiskey">Whiskey</label>
+                <input name="choice" type="radio" value="whiskey bar"/>	            
+              </div>
+              <div>
+                <label htmlFor="tequila">Tequila</label>
+                <input name="choice" type="radio" value="tequila bar"/>	            
+              </div>
+              <div>
+                <label htmlFor="wine">Wine</label>
+                <input name="choice" type="radio" value="wine bar"/>	            
+              </div>
+              <div>
+                <label htmlFor="sports">Sports Bar</label>
+                <input name="choice" type="radio" value="sports bar"/>	            
+              </div>
+            </form>    
+        </div>
+        <Locate panTo={panTo} />
+        <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={marker} options={options} onLoad={onMapLoad} onClick={handleMapClick}>
+          <Marker className="barMarker" key={`${marker.lat}-${marker.lng}`} position={{lat: marker.lat, lng:marker.lng}} />
+          
+          {places?.length > 0 && places.map(place => ( <Marker key={place?.key} position={{lat: place?.latlng.lat, lng: place?.latlng.lng}} onClick={() => {setSelected(place)}}/> ))}
+          {selected ? (
+            <InfoWindow 
+              position={{lat:selected.latlng.lat,lng:selected.latlng.lng}} 
+              onCloseClick={()=> {setSelected(null)}}>
+                <div className="InfoWindow">
+                  <p>{selected.name}</p>
+                  <p>{selected.address}</p>
+                  <p>Rating: {selected.rating}</p>
+                  <p><a href={`https://www.google.com/maps/dir/?api=1&origin=${marker.lat},${marker.lng}&destination=${selected.address}`}>Directions</a></p>
+                </div>   
+            </InfoWindow>
+            ) : null}
+        </GoogleMap>
       </div>
-      <Locate panTo={panTo} />
-      <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={marker} options={options} onLoad={onMapLoad} onClick={handleMapClick}>
-        <Marker className="barMarker" key={`${marker.lat}-${marker.lng}`} position={{lat: marker.lat, lng:marker.lng}} />
-        
-        {places?.length > 0 && places.map(place => ( <Marker key={place?.key} position={{lat: place?.latlng.lat, lng: place?.latlng.lng}} onClick={() => {setSelected(place)}}/> ))}
-        {selected ? (
-          <InfoWindow 
-            position={{lat:selected.latlng.lat,lng:selected.latlng.lng}} 
-            onCloseClick={()=> {setSelected(null)}}>
-              <div className="InfoWindow">
-                <p>{selected.name}</p>
-                <p><a href={`https://www.google.com/maps/dir/?api=1&origin=${marker.lat},${marker.lng}&destination=${selected.address}`}>Directions</a></p>
-              </div>   
-          </InfoWindow>
-          ) : null
-        }
-      </GoogleMap>
-    </div>
-  );
+  )
 }
 
 export default Map;

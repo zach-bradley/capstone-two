@@ -14,17 +14,12 @@ function App() {
   const handleUpdater = () => {
 	  setUpdate(!update)
   }
-		
+
   useEffect(() => {
     auth.onAuthStateChanged(authUser => {
-		console.log(authUser)
       if(authUser) {
-		db.collection("users").doc(authUser.uid).get().then(doc => setUser(doc.data()))  
-		// setUser({
-		// 	name: authUser.displayName,
-		// 	email: authUser.email,
-		// 	uid: authUser.uid
-		// })
+		  db.collection("users").doc(authUser.uid).get().then(doc => {
+        setUser(doc.data())})
       } else {
         setUser(null);
       }
@@ -32,19 +27,21 @@ function App() {
   }, []) 
   	
 	useEffect(() => {
-		let list = [];
-		async function getData(){
-			await db.collection("users").doc(user?.uid).collection("favorites").get()
-			.then(function(querySnapshot) {
-				querySnapshot.forEach(function(doc) {
-					list.push({...doc.data(), id: doc.id})
-				});
-			}).then(() => {
-				setFavorites(list);
-				setUpdate(false);
-			})
-		}
-		getData()
+    if(user) {
+      let list = [];
+      async function getData(){
+        await db.collection("users").doc(user?.uid).collection("favorites").get()
+        .then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+            list.push({...doc.data(), id: doc.id})
+          });
+        }).then(() => {
+          setFavorites(list);
+          setUpdate(false);
+        })
+      }
+      getData()      
+    }
 	},[user, update])
 	
   const handleRemoveFavorite = e => {
@@ -65,7 +62,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Route path='/map'>
-          <Map user={user} handleUpdater={handleUpdater} />
+          <Map user={user} handleUpdater={handleUpdater} /> 
         </Route>
         <Route exact path='/profile'>
 			{user ? <Profile user={user} handleAuthentication={handleAuthentication} favorites={favorites} handleRemoveFavorite={handleRemoveFavorite} /> : <Redirect to="/map" />}
@@ -76,12 +73,12 @@ function App() {
         <Route exact path="/register">
           <Register user={user}/>
         </Route>
-        <Redirect to={user ? "/profile" : "/login"} />
+
       </BrowserRouter>
     </div>
   );
 }
 
 // let data =  db.collection("users").doc(user?.uid).get().then(doc => console.log(doc.data().username))
-
+        // <Redirect to={user ? "/map" : "/login"} />
 export default App;
