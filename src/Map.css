@@ -32,14 +32,6 @@
 	color: #121212;
 }
 
-@media only screen and (max-width: 480px) {
-
-	.Map__ProfileLink {
-		right: 2rem;
-		top: 1rem;
-	}
-}
-
 
 #Checkbox {
 	padding: 10px;
@@ -48,9 +40,9 @@
 	left:0;
 	top:2.5rem;	
 	transition: transform .3s cubic-bezier(0, .52, 0, 1);
-  z-index: 11;
+  z-index: 22;
   height: 60vh;
-  width: 180px;
+  width: 185px;
   background-color: #121212;
   box-shadow: 5px 0px 10px black;
   border-radius: 0 10px 10px 0;
@@ -84,10 +76,10 @@
 #Checkbox__Tab {
   position: absolute;
   top: 8rem;
-  left: 198px;
+  left: 205px;
   height: 100px;
   width: 45px;
-  z-index: 8;
+  z-index: 10;
   background-color: white;
   text-align: center;
   border-radius: 0 10px 10px 0;
@@ -99,4 +91,20 @@
   background-color: #414141;
   color: white;
   transition: transform .3s cubic-bezier(0, .52, 0, 1);
+}
+
+@media only screen and (max-width: 480px) {
+
+	.Map__ProfileLink {
+		right: 2rem;
+		top: 1rem;
+  }
+
+  #Checkbox {
+    top:11rem;
+  }
+
+  #Checkbox__Tab {
+    top: 0rem;
+  }
 }

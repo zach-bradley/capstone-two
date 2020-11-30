@@ -28,6 +28,6 @@
   }
 
   [data-reach-combobox-popover] {
-    z-index: 20;
+    z-index: 24;
   }
 }

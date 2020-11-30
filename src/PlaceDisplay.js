@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import './PlaceDisplay.css';
 
-function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace, handleFavorite}) {
+function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace, handleFavorite, distance}) {
   const [favorite, setFavorite] = useState("far")
   const linkAddress = `https://www.google.com/maps/dir/?api=1&destination=${address}`;
   const handleClick = (e) => {
@@ -28,6 +28,7 @@ function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace, 
       <div className="PlaceDisplay__Text">
         <p className="PlaceDisplay__Address">{address}</p>
         <p className="PlaceDisplay__Rating">Rating: {rating}</p>
+        <p className="PlaceDisplay__Distance">{distance.toFixed(2)} mi.</p>
       </div>
 	  <div className="PlaceDisplay__Footer">
 		 <a className="PlaceDisplay__Button" href={linkAddress}>Directions</a>

@@ -6,7 +6,7 @@ import Search from './Search';
 import Locate from "./Locate";
 import Panel from './Panel';
 import { Link } from 'react-router-dom';
-import {fetchData, retry, postToServer} from './helpers';
+import {retry, postToServer} from './helpers';
 import {db} from "./firebase";
 
 
@@ -99,14 +99,13 @@ function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
       async function getData() {
         if(term) {
         let placeData = await postToServer(term,marker)
-        console.log(placeData)
         let token = placeData.pageToken;
         setPlaces(placeData.results);
-        //   let next = await retry(() => fetchData(marker, term, token),8);
-        //   setPlaces(p => p.concat(next.results))
-        //   let nextToken = next.pageToken;
-        //   let final = await retry(() => fetchData(marker, term, nextToken),5);
-        //   setPlaces(p => p.concat(final.results))
+        let next = await retry(() => postToServer(term,marker,token),8);
+        setPlaces(p => p.concat(next.results))
+        let nextToken = next.pageToken;
+        let final = await retry(() => postToServer(marker, term, nextToken),8);
+        setPlaces(p => p.concat(final.results))
         }
       }
       getData()

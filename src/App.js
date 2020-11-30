@@ -73,12 +73,12 @@ function App() {
         <Route exact path="/register">
           <Register user={user}/>
         </Route>
-
+        <Redirect to={user ? "/profile" : "/login"} />
       </BrowserRouter>
     </div>
   );
 }
 
 // let data =  db.collection("users").doc(user?.uid).get().then(doc => console.log(doc.data().username))
-        // <Redirect to={user ? "/map" : "/login"} />
+
 export default App;

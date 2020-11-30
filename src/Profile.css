@@ -51,6 +51,14 @@
   box-shadow: 5px 3px 5px black;
 }
 
+.Profile__ContainerInfo > hr {
+  width: 90%;
+}
+
+.Profile__ContainerInfo > p {
+  margin-left: 5%;
+}
+
 .Profile__ContainerInfoFriends {
 	margin-right: 5%;
 	margin-left: 5%;
@@ -95,21 +103,23 @@
 	.Profile__Container {
 	  flex-direction: column;
 	  align-items: center;
-	  margin-top: auto;
+    margin-top: auto;
 	}
 	
 	.Profile__ContainerInfoFriends {
 		flex-grow: 80%;
 		margin-top: auto;
 		margin-left: 0;
-		margin-right: 0;
+    margin-right: 0;
 		width: 80%;
 	}
 
 	.Profile__ContainerFavorites {
 	  width: 80%;
 	  margin-right: 0;
-	  padding: 0;
+    padding: 0 0 5px 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
 	}
 }
 

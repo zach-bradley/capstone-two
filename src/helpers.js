@@ -2,25 +2,50 @@ import Places from 'google-places-web';
 import axios from "axios";
 Places.apiKey = "AIzaSyBWMoZX5xY3yW07JpwybHdhogQn9R1XG4c";
 
-function formatData(data) {
+function getDistanceFromLatLon(lat1,lon1,lat2,lon2) {
+  var R = 6371; // Radius of the earth in km
+  var dLat = deg2rad(lat2-lat1);  // deg2rad below
+  var dLon = deg2rad(lon2-lon1); 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+	let conversion =  d / 1.609344;
+	return conversion
+}
+
+function deg2rad(deg) {
+  return deg * (Math.PI/180)
+}
+
+function formatData(data, marker) {
   return data.map(place => (
     {address: place.formatted_address ? place.formatted_address : null,
     latlng: place.geometry.location,
     name: place.name,
     photos: null,
     rating: place.rating,
-    key: place.place_id
+		key: place.place_id,
+		distance: getDistanceFromLatLon(place.geometry.location.lat, place.geometry.location.lng, marker.lat,marker.lng)
     }
   )); 
 }
 
-export async function postToServer(term, marker) {
-	let request = await axios.post("http://localhost:5001/happy-hour-79e9b/us-central1/api/search", {
+export async function postToServer(term, marker, pageToken) {
+	let search = pageToken ? {
+		query: term,
+		location: `${marker.lat}, ${marker.lng}`,
+		pagetoken: pageToken
+		} : {
 		query: term,
 		location: `${marker.lat}, ${marker.lng}`
-	})
-	let results = formatData(request.data.results);
-	let token = request.next_page_token ? request.next_page_token: null;
+		};
+	let request = await axios.post("http://localhost:5001/happy-hour-79e9b/us-central1/api/search", search)
+	let results = formatData(request.data.results, marker);
+	let token = request.data.next_page_token ? request.data.next_page_token: null;
 	return {results: results, pageToken: token}
 }
 
@@ -44,26 +69,6 @@ export function removeDups(origArr, updatingArr) {
     }
 	}
 	return copyArr
-}
-
-
-export async function fetchData(marker,term, pageToken) {
-	try{
-		let search = pageToken ? {
-		query: term,
-		location: `${marker.lat}, ${marker.lng}`,
-		pagetoken: pageToken
-		} : {
-		query: term,
-		location: `${marker.lat}, ${marker.lng}`
-		};
-		let response = await Places.textsearch(search);
-		let results = formatData(response.results);
-		let token = response.next_page_token ? response.next_page_token: null;
-		return {results: results, pageToken: token}
-	} catch(error) {
-		return {error: error}
-	}
 }
 
 export async function delay(ms){

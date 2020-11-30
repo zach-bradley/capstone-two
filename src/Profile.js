@@ -11,9 +11,9 @@ function Profile({user, handleAuthentication, favorites, handleRemoveFavorite}) 
 		e.preventDefault()
 		setModalToggle(!modalToggle)
 	}
-	const handleGetUsers = e => {
-		e.preventDefault()
-	}
+	// const handleGetUsers = e => {
+	// 	e.preventDefault()
+	// }
   return (
     <div className="Profile">
 	  <div className="Profile__Header">
@@ -27,10 +27,10 @@ function Profile({user, handleAuthentication, favorites, handleRemoveFavorite}) 
       <div className="Profile__Container">
 		<div className="Profile__ContainerInfoFriends">
 			<div className="Profile__ContainerInfo">
-			  <h1>Info</h1>
-			  <p><strong>Username:</strong> {user?.username}</p>
-			  <p><strong>Name:</strong> {user?.fullname}</p>
-			  <p><strong>Email:</strong> {user?.email}</p>
+				<h1>{user.fullname}'s Info</h1>
+				<hr/>
+				<p><strong><i class="fas fa-user"></i> Username:</strong> {user?.username}</p>
+				<p><strong><i class="fas fa-envelope"></i> Email:</strong> {user?.email}</p>
 			</div>
 			<div className="Profile__ContainerFriends">
 			  <h1>Friends</h1>
