@@ -73,7 +73,7 @@ function App() {
         <Route exact path="/register">
           <Register user={user}/>
         </Route>
-        <Redirect to={user ? "/profile" : "/login"} />
+        <Redirect to={user ? "/map" : "/login"} />
       </BrowserRouter>
     </div>
   );

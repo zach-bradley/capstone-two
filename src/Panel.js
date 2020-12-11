@@ -1,9 +1,10 @@
 import React from 'react';
 import './Panel.css';
 import PlaceDisplay from './PlaceDisplay';
+import PlaceShow from './PlaceShow';
 
 
-function Panel({visibility, onClick, data, coords, panToPlace, user, handleFavorite}) {
+function Panel({visibility, onClick, data, coords, panToPlace, handleFavorite, placeShowData, placeShowActive, handleBackClick, getPlaceData}) {
   let sortedData = data.length > 0 ? data.sort((a,b) => a.distance - b.distance) : null;
 	return (
     <div className="wrapper">
@@ -11,11 +12,11 @@ function Panel({visibility, onClick, data, coords, panToPlace, user, handleFavor
         <p className="Panel__TabText">Bars</p>
       </div>    
       <div id="Panel" className={visibility}>
-        <div className="Panel__PlaceList">
+        {placeShowActive ? <PlaceShow data={placeShowData} handleBackClick={handleBackClick}/> : <div className="Panel__PlaceList">
           {data.length > 0 ? sortedData.map(place => (
-            <PlaceDisplay handleFavorite={handleFavorite} key={place?.key} id={place?.key} address={place?.address ? place?.address : place?.name} name={place?.name} rating={place?.rating} lat={place?.latlng.lat} lng={place?.latlng.lng} coords={coords} panToPlace={panToPlace} distance={place.distance}/>
+            <PlaceDisplay handleFavorite={handleFavorite} key={place?.key} id={place?.key} address={place?.address ? place?.address : place?.name} name={place?.name} rating={place?.rating} lat={place?.latlng.lat} lng={place?.latlng.lng} coords={coords} getPlaceData={getPlaceData} panToPlace={panToPlace} distance={place.distance}/>
           )) : <h1>Add filters to see nearby bars!</h1>}
-        </div>
+        </div>}
       </div>    
     </div>
 

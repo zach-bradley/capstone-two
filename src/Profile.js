@@ -29,8 +29,8 @@ function Profile({user, handleAuthentication, favorites, handleRemoveFavorite}) 
 			<div className="Profile__ContainerInfo">
 				<h1>{user.fullname}'s Info</h1>
 				<hr/>
-				<p><strong><i class="fas fa-user"></i> Username:</strong> {user?.username}</p>
-				<p><strong><i class="fas fa-envelope"></i> Email:</strong> {user?.email}</p>
+				<p><strong><i className="fas fa-user"></i> Username:</strong> {user?.username}</p>
+				<p><strong><i className="fas fa-envelope"></i> Email:</strong> {user?.email}</p>
 			</div>
 			<div className="Profile__ContainerFriends">
 			  <h1>Friends</h1>

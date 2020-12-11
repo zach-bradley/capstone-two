@@ -1,12 +1,12 @@
 import React, {useRef, useCallback, useState, useEffect} from 'react';
 import './Map.css';
-import {GoogleMap, useLoadScript, Marker, InfoWindow} from '@react-google-maps/api';
+import {GoogleMap, useLoadScript, Marker} from '@react-google-maps/api';
 import mapStyles from './mapStyles';
 import Search from './Search';
 import Locate from "./Locate";
 import Panel from './Panel';
 import { Link } from 'react-router-dom';
-import {retry, postToServer} from './helpers';
+import {retry, postToServer, removeDups} from './helpers';
 import {db} from "./firebase";
 
 
@@ -16,24 +16,27 @@ const mapContainerStyle = {
   height: '100vh',
 }
 
-let center= {
-  lat: 40.9584, 
-  lng: -75.9746,
-  show:true  
-};
+let center;
+
+navigator.geolocation.getCurrentPosition(function(position) {
+  center = {lat: position.coords.latitude, lng: position.coords.longitude}
+})
+
 const options = {
   styles: mapStyles,
-  disableDefaultUI: true
+  disableDefaultUI: true,
+  disableDoubleClickZoom: true
 }
 
 
-function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
+function Map({user, handleUpdater}) {
   const [marker, setMarker] = useState(center);
   const [places, setPlaces] = useState([]);
   const [term, setTerm] = useState();
-  const [panel, setPanel] = useState("hide");
-  const [filter, setFilter] = useState("show")
-  const [selected, setSelected] = useState(null);
+  const [panel, setPanel] = useState("show");
+  const [filter, setFilter] = useState("filterhide")
+  const [placeShowActive, setPlaceShowActive] = useState(false);
+  const [placeShowData, setPlaceShowData] = useState()
   const {isLoaded, loadError} = useLoadScript({
     googleMapsApiKey:"AIzaSyBWMoZX5xY3yW07JpwybHdhogQn9R1XG4c",
     libraries
@@ -43,11 +46,17 @@ function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
   const panTo = useCallback(({lat, lng}) => {
     mapRef.current.panTo({lat, lng});
     mapRef.current.setZoom(15);
-    setMarker({lat,lng,show:true});
+    setMarker({lat,lng});
   }, []);
+
+  const getPlaceData = id => {
+    let place = places.filter(place => place.key === id)
+    setPlaceShowData(place[0]);
+    setPlaceShowActive(true);
+    if (panel !== "show") setPanel("show");
+  }
   
   const panToPlace = useCallback(({lat, lng}) => {
-    setPanel("hide");
     mapRef.current.panTo({lat,lng});
     mapRef.current.setZoom(17);
   }, []);
@@ -58,6 +67,7 @@ function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
 				setTerm(null)
 				setPlaces([])
 			} else {
+        setPlaceShowActive(false)
 				setTerm(e.target.value);
 				setFilter("filterhide");
 				setPanel("show")
@@ -68,6 +78,7 @@ function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
 			setPlaces([])
 		}
   }
+
   const handleFavorite = id => {
     let favPlace = places.filter(place => place.key === id);
 	  db
@@ -87,33 +98,42 @@ function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
     }
   }
 
+  const handleBackClick = () => {
+    setPlaceShowActive(false)
+  }
+
   const handleMapClick = e => {
     setMarker({
       lat: e.latLng.lat(),
       lng: e.latLng.lng(),
-      show: true
     })
   }
+  useEffect(() => {
+    setTerm("bar")
+  }, [])
  
 	useEffect(() => {
       async function getData() {
         if(term) {
-        let placeData = await postToServer(term,marker)
-        let token = placeData.pageToken;
-        setPlaces(placeData.results);
-        let next = await retry(() => postToServer(term,marker,token),8);
-        setPlaces(p => p.concat(next.results))
-        let nextToken = next.pageToken;
-        let final = await retry(() => postToServer(marker, term, nextToken),8);
-        setPlaces(p => p.concat(final.results))
+          let placeData = await postToServer(term,marker)
+          let token = placeData.pageToken;
+          setPlaces(placeData.results);
+          let next = await retry(() => postToServer(term,marker,token),8);
+          // let nextRemovedDups = removeDups(placeData.results, next.results)
+          setPlaces(p => p.concat(next.results))
+          let nextToken = next.pageToken;
+          let final = await retry(() => postToServer(marker, term, nextToken),8);
+          // let finalRemovedDups = removeDups(next.results, final.results)
+          // setPlaces(p => p.concat(final.results))          
         }
       }
       getData()
   }, [term,marker])
-  // marker, term, handleMapLoad
-  useEffect(() => {
-    setTerm("bar")
-  }, [])
+
+  const handlePinClick = place => {
+    let data = place;
+    getPlaceData(data.key)
+  }
 
   const mapRef = useRef();
   const onMapLoad = useCallback((map) => {
@@ -128,7 +148,7 @@ function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
         <div className="Map__ProfileLink">
           <Link to={user ? "/profile" : "/login"}><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
         </div>
-        <Panel visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace} handleFavorite={handleFavorite}/>
+        <Panel visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace} handleFavorite={handleFavorite} placeShowActive={placeShowActive} handleBackClick={handleBackClick} getPlaceData={getPlaceData} placeShowData={placeShowData}/>
         <Search center={center} panTo={panTo} /> 
         <div id="Checkbox" className={filter}>
           <div id="Checkbox__Tab" onClick={handleClick}>
@@ -136,10 +156,6 @@ function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
           </div>  		  
           <h5>Filters</h5>
             <form onChange={onCheck} className="Map__Filter">
-              <div>
-                <label htmlFor="none">Remove Filter</label>
-                <input name="choice" type="radio" value="null"/>	               
-              </div>
               <div>
                 <label htmlFor="bar">All Bars</label>
                 <input name="choice" type="radio" value="bar" defaultChecked />	               
@@ -167,25 +183,17 @@ function Map({user, handleUpdater, handleMapLoad, mapLoaded}) {
             </form>    
         </div>
         <Locate panTo={panTo} />
-        <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={marker} options={options} onLoad={onMapLoad} onClick={handleMapClick}>
-          <Marker className="barMarker" key={`${marker.lat}-${marker.lng}`} position={{lat: marker.lat, lng:marker.lng}} />
+        <GoogleMap mapContainerStyle={mapContainerStyle} zoom={15} center={marker} options={options} onLoad={onMapLoad} onDblClick={handleMapClick}>
+          <Marker className="barMarker" key={`${marker.lat}-${marker.lng}`} position={{lat: marker.lat, lng:marker.lng}} icon={"http://maps.google.com/mapfiles/ms/icons/blue-dot.png"}/>
           
-          {places?.length > 0 && places.map(place => ( <Marker key={place?.key} position={{lat: place?.latlng.lat, lng: place?.latlng.lng}} onClick={() => {setSelected(place)}}/> ))}
-          {selected ? (
-            <InfoWindow 
-              position={{lat:selected.latlng.lat,lng:selected.latlng.lng}} 
-              onCloseClick={()=> {setSelected(null)}}>
-                <div className="InfoWindow">
-                  <p>{selected.name}</p>
-                  <p>{selected.address}</p>
-                  <p>Rating: {selected.rating}</p>
-                  <p><a href={`https://www.google.com/maps/dir/?api=1&origin=${marker.lat},${marker.lng}&destination=${selected.address}`}>Directions</a></p>
-                </div>   
-            </InfoWindow>
-            ) : null}
+          {places?.length > 0 && places.map(place => ( <Marker key={place?.key} label={{text: place.name, color:"white"}} position={{lat: place?.latlng.lat, lng: place?.latlng.lng}} onClick={() => handlePinClick(place)}
+          /> ))}
+
+
         </GoogleMap>
       </div>
   )
 }
 
 export default Map;
+

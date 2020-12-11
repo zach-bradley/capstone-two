@@ -44,6 +44,7 @@ export async function postToServer(term, marker, pageToken) {
 		location: `${marker.lat}, ${marker.lng}`
 		};
 	let request = await axios.post("http://localhost:5001/happy-hour-79e9b/us-central1/api/search", search)
+	// https://us-central1-happy-hour-79e9b.cloudfunctions.net/api/search 
 	let results = formatData(request.data.results, marker);
 	let token = request.data.next_page_token ? request.data.next_page_token: null;
 	return {results: results, pageToken: token}
@@ -58,18 +59,29 @@ export function findIfIncluded(arr, term) {
 	return false;
 }
 
-export function removeDups(origArr, updatingArr) {
-	let copyArr = origArr;
-	for(var i = 0, l = copyArr.length; i < l; i++) {
-    for(var j = 0, ll = updatingArr.length; j < ll; j++) {
-        if(copyArr[i].id === updatingArr[j].id) {
-            copyArr.splice(i, 1, updatingArr[j]);
-            break;
-        }
-    }
-	}
-	return copyArr
+function comparer(otherArray){
+  return function(current){
+    return otherArray.filter(function(other){
+      return other.value === current.value && other.display === current.display
+    }).length === 0;
+  }
 }
+
+// export function removeDups(origArr, updatingArr) {
+// 	// for(var i = 0, l = copyArr.length; i < l; i++) {
+//   //   for(var j = 0, ll = updatingArr.length; j < ll; j++) {
+//   //       if(copyArr[i].id === updatingArr[j].id) {
+//   //           copyArr.splice(i, 1, updatingArr[j]);
+//   //           break;
+//   //       }
+//   //   }
+// 	// }
+// 	let onlyInOriginal = origArr.filter(comparer(updatingArr));
+	
+// 	let onlyInUpdating = updatingArr.filter(comparer(origArr));
+
+// 	let result = onlyInOriginal.concat(onlyInUpdating);
+// }
 
 export async function delay(ms){
  return new Promise(resolve => setTimeout(resolve, ms))

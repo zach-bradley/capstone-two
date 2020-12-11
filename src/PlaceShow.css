@@ -1,0 +1,54 @@
+.PlaceShow {
+  font-family: Helvetica;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.PlaceShow__Back {
+  margin: 5px 0px 5px 5px;
+}
+
+.PlaceShow__Header {
+  border-bottom: 1px solid lightgray;
+}
+
+.PlaceShow__Header-Image {
+  width: 100%;
+  border-radius: 8px 8px 0px 0px;
+}
+
+.PlaceShow__Header-Title {
+  margin-bottom: 0px;
+  padding:20px 24px 0px 24px;
+}
+
+.PlaceShow__Header-Rating {
+  margin: 0px;
+  padding: 0px 24px 0px 24px;
+}
+
+.PlaceShow__Header-Distance {
+  margin-top: 0px;
+  padding: 0px 24px 20px 24px;
+  font-size: 14px;
+  color: gray;
+}
+
+.PlaceShow__Body {
+  padding: 20px 24px 20px 24px;
+}
+
+.PlaceShow__Body-Address {
+  font-size: 14px;
+}
+
+.PlaceShow__Body-Link {
+  padding: 5px 10px;
+  background-color: #0094C6;
+  color: #121212;
+  text-decoration: none;
+  font-weight: 700;
+  border-radius: 5px;
+  cursor: pointer;
+}
+

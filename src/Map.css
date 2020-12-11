@@ -3,6 +3,10 @@
   height: 100vh;
 }
 
+.Marker {
+  color: white;
+}
+
 .LoadingElement {
   height: 100%;
 }
@@ -37,15 +41,36 @@
 	padding: 10px;
 	overflow: visible;
 	position: fixed; 
-	left:0;
-	top:2.5rem;	
+	right: 0;
+	bottom:2rem;	
 	transition: transform .3s cubic-bezier(0, .52, 0, 1);
-  z-index: 22;
-  height: 60vh;
-  width: 185px;
+  z-index: 15;
+  height: 50vh;
+  width: 8rem;
   background-color: #121212;
-  box-shadow: 5px 0px 10px black;
+  box-shadow: -5px 0px 10px black;
   border-radius: 0 10px 10px 0;
+}
+
+
+#Checkbox__Tab {
+  position: absolute;
+  top: 8rem;
+  right: 9.25rem;
+  height: 100px;
+  width: 45px;
+  z-index: 13;
+  background-color: white;
+  text-align: center;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -5px 4px 6px black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #414141;
+  color: white;
+  transition: transform .3s cubic-bezier(0, .52, 0, 1);
 }
 
 #Checkbox > form {
@@ -64,7 +89,7 @@
 }
 
 .filterhide {
-	 transform: translate3d(-205px, 0, 0);
+	 transform: translate3d(9.75rem, 0, 0);
 }
 
 .Checkbox__TabText {
@@ -73,38 +98,11 @@
   font-weight: 700;
 }
 
-#Checkbox__Tab {
-  position: absolute;
-  top: 8rem;
-  left: 205px;
-  height: 100px;
-  width: 45px;
-  z-index: 10;
-  background-color: white;
-  text-align: center;
-  border-radius: 0 10px 10px 0;
-  box-shadow: 5px 4px 6px black;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #414141;
-  color: white;
-  transition: transform .3s cubic-bezier(0, .52, 0, 1);
-}
 
 @media only screen and (max-width: 480px) {
 
 	.Map__ProfileLink {
 		right: 2rem;
 		top: 1rem;
-  }
-
-  #Checkbox {
-    top:11rem;
-  }
-
-  #Checkbox__Tab {
-    top: 0rem;
   }
 }
