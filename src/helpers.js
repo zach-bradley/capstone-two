@@ -43,8 +43,10 @@ export async function postToServer(term, marker, pageToken) {
 		query: term,
 		location: `${marker.lat}, ${marker.lng}`
 		};
-	let request = await axios.post("http://localhost:5001/happy-hour-79e9b/us-central1/api/search", search)
-	// https://us-central1-happy-hour-79e9b.cloudfunctions.net/api/search 
+	let request = await axios.post(
+	//  "http://localhost:5001/happy-hour-79e9b/us-central1/api/search"
+	"https://us-central1-happy-hour-79e9b.cloudfunctions.net/api/search"
+	, search)
 	let results = formatData(request.data.results, marker);
 	let token = request.data.next_page_token ? request.data.next_page_token: null;
 	return {results: results, pageToken: token}

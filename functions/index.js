@@ -17,7 +17,6 @@ app.get("/", (req,res) => {
 })
 
 app.post('/search', async (req,res) => {
-  console.log(req.body);
   let response = await Places.textsearch(req.body);
   return res.send(response)
 })

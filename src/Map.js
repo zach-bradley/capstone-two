@@ -121,6 +121,7 @@ function Map({user, handleUpdater}) {
           let next = await retry(() => postToServer(term,marker,token),8);
           // let nextRemovedDups = removeDups(placeData.results, next.results)
           setPlaces(p => p.concat(next.results))
+          console.log(placeData, next)
           let nextToken = next.pageToken;
           let final = await retry(() => postToServer(marker, term, nextToken),8);
           // let finalRemovedDups = removeDups(next.results, final.results)
