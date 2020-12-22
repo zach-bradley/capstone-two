@@ -7,11 +7,13 @@
   margin-bottom: 10px;
 }
 
-.PlaceDisplay__Footer {
-	display: flex;
+.PlaceDisplay__Header {
+  display: flex;
+  align-items: center;
 }
 
-.PlaceDisplay__Footer > i {
+
+.PlaceDisplay__Header > i {
 	margin-left: auto;
 	margin-right: 10px;
 	cursor: pointer;

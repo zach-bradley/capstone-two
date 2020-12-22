@@ -77,6 +77,13 @@
   box-shadow: 5px 3px 5px black;
 }
 
+.Profile__ContainerFriendsList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%;
+}
+
 .Profile__ContainerFavorites {
   background-color: rgba(255,255,255,.15);
   border-radius: 8px;

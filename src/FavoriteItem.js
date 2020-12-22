@@ -1,10 +1,8 @@
 import React from 'react';
 import './FavoriteItem.css'
-import {formatAddress} from './helpers';
 
 function FavoriteItem({name, databaseId, rating, address, handleRemoveFavorite}) {
-	let formattedAddress = formatAddress(address);
-	let link = `https://www.google.com/maps/dir/?api=1&destination=${formattedAddress}`
+	let link = `https://www.google.com/maps/dir/?api=1&destination=${address}`
 	return (
 		<div className="FavoriteItem" >
 			<div className="FavoriteItem__Header">

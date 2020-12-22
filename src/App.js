@@ -5,11 +5,13 @@ import Profile from './Profile';
 import Login from './Login';
 import Register from './Register';
 import {auth, db} from "./firebase";
+import {updateFavorites, updateFriends, removeFriend} from './helpers';
 
 function App() {
   const [user, setUser] = useState(null);
   const [update, setUpdate] = useState(false);
   const [favorites, setFavorites] = useState(null);
+  const [friends, setFriends] = useState(null);
 	
   const handleUpdater = () => {
 	  setUpdate(!update)
@@ -28,17 +30,12 @@ function App() {
   	
 	useEffect(() => {
     if(user) {
-      let list = [];
       async function getData(){
-        await db.collection("users").doc(user?.uid).collection("favorites").get()
-        .then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-            list.push({...doc.data(), id: doc.id})
-          });
-        }).then(() => {
-          setFavorites(list);
-          setUpdate(false);
-        })
+        let favorites = await updateFavorites(user);
+        let friends = await updateFriends(user);
+        setFavorites(favorites);
+        setFriends(friends)
+        setUpdate(false);
       }
       getData()      
     }
@@ -49,6 +46,11 @@ function App() {
 		db.collection("users").doc(user?.uid).collection("favorites").doc(target).delete()
 		.then(() => handleUpdater())
 		.catch(error => console.log(error))									   
+  }
+
+  const handleRemoveFriend = friendId => {
+    removeFriend(user, friendId)
+    handleUpdater();		
   }
 	
   const handleAuthentication = () => {
@@ -62,10 +64,10 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Route path='/map'>
-          <Map user={user} handleUpdater={handleUpdater} /> 
+          <Map user={user} handleUpdater={handleUpdater} favorites={favorites}/> 
         </Route>
         <Route exact path='/profile'>
-			{user ? <Profile user={user} handleAuthentication={handleAuthentication} favorites={favorites} handleRemoveFavorite={handleRemoveFavorite} /> : <Redirect to="/map" />}
+			{user ? <Profile user={user} handleRemoveFriend={handleRemoveFriend} handleAuthentication={handleAuthentication} favorites={favorites} friends={friends} handleRemoveFavorite={handleRemoveFavorite} handleUpdater={handleUpdater} /> : <Redirect to="/map" />}
         </Route>
         <Route exact path="/login">
           <Login />
@@ -78,7 +80,5 @@ function App() {
     </div>
   );
 }
-
-// let data =  db.collection("users").doc(user?.uid).get().then(doc => console.log(doc.data().username))
 
 export default App;

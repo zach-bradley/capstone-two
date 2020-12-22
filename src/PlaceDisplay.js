@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import './PlaceDisplay.css';
 
-function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace, handleFavorite, distance, getPlaceData}) {
-  const [favorite, setFavorite] = useState("far")
-  const linkAddress = `https://maps.google.com/?saddr=Current%20Location&daddr=${address}`;
+function PlaceDisplay({name, rating, id, lat, lng, panToPlace, handleFavorite, distance, getPlaceData, favoriteStatus}) {
+  const [favorite, setFavorite] = useState(favoriteStatus)
   const handleClick = (e) => {
     let target = e.currentTarget;
     let lat = parseFloat(target.getAttribute("data-lat"));
@@ -25,7 +24,10 @@ function PlaceDisplay({address, name, rating, id, lat, lng, coords, panToPlace, 
   
   return (
     <div className="PlaceDisplay" data-lat={lat} data-lng={lng} id={id} onClick={handleClick}>
-      <h2 className="PlaceDisplay__Title">{name}</h2>
+      <div className="PlaceDisplay__Header">
+        <h2 className="PlaceDisplay__Title">{name}</h2>
+        <i onClick={handleFavoriteChange} className={`${favorite} fa-heart`}></i>
+      </div> 
       <div className="PlaceDisplay__Text">
         <p className="PlaceDisplay__Rating">Rating: {rating}</p>
         <p className="PlaceDisplay__Distance">{distance.toFixed(2)} mi.</p>

@@ -6,7 +6,7 @@ import Search from './Search';
 import Locate from "./Locate";
 import Panel from './Panel';
 import { Link } from 'react-router-dom';
-import {retry, postToServer, removeDups} from './helpers';
+import {retry, postToServer, comparer} from './helpers';
 import {db} from "./firebase";
 
 
@@ -29,7 +29,7 @@ const options = {
 }
 
 
-function Map({user, handleUpdater}) {
+function Map({user, handleUpdater, favorites}) {
   const [marker, setMarker] = useState(center);
   const [places, setPlaces] = useState([]);
   const [term, setTerm] = useState();
@@ -41,7 +41,6 @@ function Map({user, handleUpdater}) {
     googleMapsApiKey:"AIzaSyBWMoZX5xY3yW07JpwybHdhogQn9R1XG4c",
     libraries
   });
-
 	
   const panTo = useCallback(({lat, lng}) => {
     mapRef.current.panTo({lat, lng});
@@ -119,13 +118,12 @@ function Map({user, handleUpdater}) {
           let token = placeData.pageToken;
           setPlaces(placeData.results);
           let next = await retry(() => postToServer(term,marker,token),8);
-          // let nextRemovedDups = removeDups(placeData.results, next.results)
-          setPlaces(p => p.concat(next.results))
-          console.log(placeData, next)
+          let nextRemovedDups = next.results.filter(comparer(placeData.results))
+          nextRemovedDups > 0 ? setPlaces(p => p.concat(nextRemovedDups)) : setPlaces(p => p.concat(next.results))
           let nextToken = next.pageToken;
           let final = await retry(() => postToServer(marker, term, nextToken),8);
-          // let finalRemovedDups = removeDups(next.results, final.results)
-          // setPlaces(p => p.concat(final.results))          
+          let finalRemovedDups = final.results.filter(comparer(next.results))
+          finalRemovedDups > 0 ? setPlaces(p => p.concat(finalRemovedDups)) : setPlaces(p => p.concat(final.results))        
         }
       }
       getData()
@@ -149,7 +147,7 @@ function Map({user, handleUpdater}) {
         <div className="Map__ProfileLink">
           <Link to={user ? "/profile" : "/login"}><img src="https://www.pinclipart.com/picdir/big/181-1814767_person-svg-png-icon-free-download-profile-icon.png" alt="profile"/></Link>
         </div>
-        <Panel visibility={panel} onClick={handleClick} data={places} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace} handleFavorite={handleFavorite} placeShowActive={placeShowActive} handleBackClick={handleBackClick} getPlaceData={getPlaceData} placeShowData={placeShowData}/>
+        <Panel visibility={panel} onClick={handleClick} data={places} favorites={favorites} coords={`${marker.lat},${marker.lng}`} panToPlace={panToPlace} handleFavorite={handleFavorite} placeShowActive={placeShowActive} handleBackClick={handleBackClick} getPlaceData={getPlaceData} placeShowData={placeShowData}/>
         <Search center={center} panTo={panTo} /> 
         <div id="Checkbox" className={filter}>
           <div id="Checkbox__Tab" onClick={handleClick}>

@@ -3,17 +3,22 @@ import {Link} from 'react-router-dom';
 import "./Profile.css";
 import FavoriteItem from './FavoriteItem';
 import Modal from './Modal';
-import FriendSearch from './FriendSearch'
+import FriendSearch from './FriendSearch';
+import Friend from './Friend'
+import {getUser} from './helpers'
 
-function Profile({user, handleAuthentication, favorites, handleRemoveFavorite}) {
+function Profile({user, handleAuthentication, favorites, friends, handleRemoveFavorite, handleRemoveFriend, handleUpdater}) {
 	const [modalToggle, setModalToggle] = useState(false);
 	const modalHandler = e => {
 		e.preventDefault()
 		setModalToggle(!modalToggle)
 	}
-	// const handleGetUsers = e => {
-	// 	e.preventDefault()
-	// }
+	const handleGetUsers = name => {
+		getUser(user.uid,name)
+		setModalToggle(false);
+		handleUpdater()
+	}
+
   return (
     <div className="Profile">
 	  <div className="Profile__Header">
@@ -34,7 +39,10 @@ function Profile({user, handleAuthentication, favorites, handleRemoveFavorite}) 
 			</div>
 			<div className="Profile__ContainerFriends">
 			  <h1>Friends</h1>
-			  <button className="Profile__ContainerFriendsButton" onClick={modalHandler}>Add Friend</button>
+				<button className="Profile__ContainerFriendsButton" onClick={modalHandler}>Add Friend</button>
+				<div className="Profile__ContainerFriendsList">
+					{friends.length ? friends.map(friend => <Friend username={friend.username} id={friend.id} key={friend.id} handleRemoveFriend={handleRemoveFriend} />) : null}
+				</div>
 			</div>	
 		</div>
 
@@ -48,7 +56,7 @@ function Profile({user, handleAuthentication, favorites, handleRemoveFavorite}) 
         </div>
       </div>
 	  	<Modal show={modalToggle} modalClosed={modalHandler}>
-		  <FriendSearch />
+		  <FriendSearch handleGetUsers={handleGetUsers} />
 		</Modal>
     </div>
   )

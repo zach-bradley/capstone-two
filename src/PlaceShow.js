@@ -18,7 +18,7 @@ function PlaceShow({data, handleBackClick}) {
       </div>
       <div className="PlaceShow__Body">
         <p className="PlaceShow__Body-Address"><strong>Address:</strong> {data?.address}</p>
-        <a className="PlaceShow__Body-Link" href="https://www.google.com/maps">Directions</a>
+        <a className="PlaceShow__Body-Link" href={`https://www.google.com/maps/dir/?api=1&destination=${data?.address}`}>Directions</a>
       </div>
     </div>
   )

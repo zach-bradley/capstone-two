@@ -1,0 +1,27 @@
+.Friend {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;	
+  background-color: rgba(255,255,255, 0.25);
+  padding: 10px;
+  width: 90%;
+  box-shadow: 3px 3px 4px black;
+} 
+
+.Friend__Close {
+  display: flex;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: auto;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #DB162F;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  align-items: center;
+  color: #121212; 
+}

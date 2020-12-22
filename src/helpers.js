@@ -1,5 +1,6 @@
 import Places from 'google-places-web';	
 import axios from "axios";
+import {db} from './firebase';
 Places.apiKey = "AIzaSyBWMoZX5xY3yW07JpwybHdhogQn9R1XG4c";
 
 function getDistanceFromLatLon(lat1,lon1,lat2,lon2) {
@@ -44,8 +45,8 @@ export async function postToServer(term, marker, pageToken) {
 		location: `${marker.lat}, ${marker.lng}`
 		};
 	let request = await axios.post(
-	//  "http://localhost:5001/happy-hour-79e9b/us-central1/api/search"
-	"https://us-central1-happy-hour-79e9b.cloudfunctions.net/api/search"
+	"http://localhost:5001/happy-hour-79e9b/us-central1/api/search"
+	// "https://us-central1-happy-hour-79e9b.cloudfunctions.net/api/search"
 	, search)
 	let results = formatData(request.data.results, marker);
 	let token = request.data.next_page_token ? request.data.next_page_token: null;
@@ -61,29 +62,13 @@ export function findIfIncluded(arr, term) {
 	return false;
 }
 
-function comparer(otherArray){
+export function comparer(otherArray){
   return function(current){
     return otherArray.filter(function(other){
       return other.value === current.value && other.display === current.display
     }).length === 0;
   }
 }
-
-// export function removeDups(origArr, updatingArr) {
-// 	// for(var i = 0, l = copyArr.length; i < l; i++) {
-//   //   for(var j = 0, ll = updatingArr.length; j < ll; j++) {
-//   //       if(copyArr[i].id === updatingArr[j].id) {
-//   //           copyArr.splice(i, 1, updatingArr[j]);
-//   //           break;
-//   //       }
-//   //   }
-// 	// }
-// 	let onlyInOriginal = origArr.filter(comparer(updatingArr));
-	
-// 	let onlyInUpdating = updatingArr.filter(comparer(origArr));
-
-// 	let result = onlyInOriginal.concat(onlyInUpdating);
-// }
 
 export async function delay(ms){
  return new Promise(resolve => setTimeout(resolve, ms))
@@ -112,5 +97,57 @@ export function formatAddress(address) {
   return arr[0];
 }
 
+export async function addFriend(userUid, friendData) {
+	await db
+		.collection("users")
+		.doc(userUid)
+		.collection("friends").doc(friendData.uid)
+	.set({id: friendData.uid, username: friendData.username})
+	.catch(error => console.log(error))
+}
+
+export async function getUser(userUid, name){
+	let trimName = name.trim();
+	await db.collection("users").get()
+	.then(querySnapshot => {
+		querySnapshot.forEach(async(doc) => {if(doc.data().username === trimName) addFriend(userUid, doc.data())})
+	});
+}
+
+export async function removeFriend(user, friendId) {
+	await db.collection("users").doc(user.uid).collection("friends").doc(friendId).delete()				   
+}
 
 
+export async function updateFavorites(user) {
+	let favList = [];
+	await db.collection("users").doc(user?.uid).collection("favorites").get()
+	.then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
+			favList.push({...doc.data(), id: doc.id})
+		});
+	})
+	return favList;
+}
+
+export async function updateFriends(user) {
+	let friendList = [];
+	await db.collection("users").doc(user?.uid).collection("friends").get()
+	.then(function(querySnapshot) {
+		querySnapshot.forEach(function(doc) {
+			friendList.push(doc.data())
+		});
+	})
+	return friendList;
+}
+
+export function inObject(data, placeId) {
+	let found = false;
+	for (let i = 0; i < data.length; i++) {
+		if (data[i].key === placeId) {
+			found = true;
+			break;
+		}
+	}
+	return found;
+}
