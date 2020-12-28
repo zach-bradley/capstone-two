@@ -91,11 +91,6 @@ export async function retry(fn, n){
 	}
 	return {error: "Can't load any more data"}
 }
-			
-export function formatAddress(address) {
-  let arr = address.split(",");
-  return arr[0];
-}
 
 export async function addFriend(userUid, friendData) {
 	await db
@@ -151,3 +146,8 @@ export function inObject(data, placeId) {
 	}
 	return found;
 }
+
+const operation = (list1, list2, isUnion = false) =>
+		list1.filter( a => isUnion === list2.some( b => a.key === b.key ) );
+		
+export function inBoth(list1, list2){operation(list1, list2, true)}

@@ -6,7 +6,7 @@ import {inObject} from './helpers';
 
 
 function Panel({visibility, onClick, data, coords, panToPlace, handleFavorite, favorites, placeShowData, placeShowActive, handleBackClick, getPlaceData}) {
-  let sortedData = data.length > 0 ? data.sort((a,b) => a.distance - b.distance) : null;
+  let sortedData = data.length ? data.sort((a,b) => a.distance - b.distance) : null;
 	return (
     <div className="wrapper">
       <div id="Panel__Tab" className={visibility} onClick={onClick}>
@@ -14,7 +14,7 @@ function Panel({visibility, onClick, data, coords, panToPlace, handleFavorite, f
       </div>    
       <div id="Panel" className={visibility}>
         {placeShowActive ? <PlaceShow data={placeShowData} handleBackClick={handleBackClick}/> : <div className="Panel__PlaceList">
-          {data.length > 0 ? sortedData.map(place => {
+          {data.length  ? sortedData.map(place => {
             let favoriteStatus = inObject(favorites, place.key) ? "fas" : "far"
             return(
             <PlaceDisplay favoriteStatus={favoriteStatus} handleFavorite={handleFavorite} key={place?.key} id={place?.key} address={place?.address ? place?.address : place?.name} name={place?.name} rating={place?.rating} lat={place?.latlng.lat} lng={place?.latlng.lng} coords={coords} getPlaceData={getPlaceData} panToPlace={panToPlace} distance={place.distance}/>

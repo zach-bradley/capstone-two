@@ -6,7 +6,7 @@ function PlaceShow({data, handleBackClick}) {
   let rating = Array(Math.round(data?.rating)).fill().map((_,i) => (
     <span key={i} role="img" aria-label="rating">⭐</span>
   ))
-
+  let link = `https://www.google.com/maps/dir/?api=1&destination=${data.address}`
   return (
   <div className="PlaceShow">
       <div className="PlaceShow__Back" onClick={handleBackClick}><i className="fas fa-arrow-left"></i></div>
@@ -18,7 +18,7 @@ function PlaceShow({data, handleBackClick}) {
       </div>
       <div className="PlaceShow__Body">
         <p className="PlaceShow__Body-Address"><strong>Address:</strong> {data?.address}</p>
-        <a className="PlaceShow__Body-Link" href={`https://www.google.com/maps/dir/?api=1&destination=${data?.address}`}>Directions</a>
+        <a className="PlaceShow__Body-Link" href={link}>Directions</a>
       </div>
     </div>
   )

@@ -19,7 +19,8 @@ const mapContainerStyle = {
 let center;
 
 navigator.geolocation.getCurrentPosition(function(position) {
-  center = {lat: position.coords.latitude, lng: position.coords.longitude}
+  center = {lat: position.coords.latitude, lng: position.coords.longitude};
+  console.log(center)
 })
 
 const options = {
@@ -30,6 +31,7 @@ const options = {
 
 
 function Map({user, handleUpdater, favorites}) {
+  const [userCenter, setUserCenter] = useState (center)
   const [marker, setMarker] = useState(center);
   const [places, setPlaces] = useState([]);
   const [term, setTerm] = useState();
@@ -116,7 +118,7 @@ function Map({user, handleUpdater, favorites}) {
         if(term) {
           let placeData = await postToServer(term,marker)
           let token = placeData.pageToken;
-          setPlaces(placeData.results);
+          setPlaces(p => !p.length ? placeData.results : placeData.results.filter(newPlace => p.filter(place => place.key !== newPlace.key)));
           let next = await retry(() => postToServer(term,marker,token),8);
           let nextRemovedDups = next.results.filter(comparer(placeData.results))
           nextRemovedDups > 0 ? setPlaces(p => p.concat(nextRemovedDups)) : setPlaces(p => p.concat(next.results))
